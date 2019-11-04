@@ -1602,7 +1602,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
                     __func__, hash.ToString(), nFees, ::minRelayTxFee.GetFee(nSize) * 10000);
         }
 
-        bool fCLTVHasMajority = CBlockIndex::IsSuperMajority(5, chainActive.Tip(), Params().EnforceBlockUpgradeMajority());
+        bool fCLTVHasMajority = CBlockIndex::IsSuperMajority(6, chainActive.Tip(), Params().EnforceBlockUpgradeMajority());
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
@@ -1811,7 +1811,7 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
                 hash.ToString(),
                 nFees, ::minRelayTxFee.GetFee(nSize) * 10000);
 
-        bool fCLTVHasMajority = CBlockIndex::IsSuperMajority(5, chainActive.Tip(), Params().EnforceBlockUpgradeMajority());
+        bool fCLTVHasMajority = CBlockIndex::IsSuperMajority(6, chainActive.Tip(), Params().EnforceBlockUpgradeMajority());
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
