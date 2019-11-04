@@ -2320,6 +2320,24 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     return ret;
 }
 
+int64_t GetFundamentalnodePayment(int nHeight, int64_t blockValue, int nFundamentalnodeCount)
+{
+    int64_t ret = 0;
+
+    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        if (nHeight < 200)
+            return 0;
+    }
+
+    if(nHeight < 209467){
+        ret = (blockValue * 6 )/ 10;
+    }
+    else{
+        ret = (blockValue * 4 )/ 10;
+    }
+    return ret;
+}
+
 bool IsInitialBlockDownload()
 {
     LOCK(cs_main);
