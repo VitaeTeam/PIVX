@@ -79,7 +79,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
             if (ExtractDestination(wtx.vout[nIndexMN].scriptPubKey, destMN) && IsMine(*wallet, destMN)) {
                 isminetype mine = wallet->IsMine(wtx.vout[nIndexMN]);
                 sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                if(nIndexMN == 2){
+                sub.type = TransactionRecord::FNReward;
+                }
+                else{
                 sub.type = TransactionRecord::MNReward;
+                }
                 sub.address = CBitcoinAddress(destMN).ToString();
                 sub.credit = wtx.vout[nIndexMN].nValue;
             }
@@ -369,7 +374,7 @@ void TransactionRecord::updateStatus(const CWalletTx& wtx)
         }
     }
     // For generated transactions, determine maturity
-    else if (type == TransactionRecord::Generated || type == TransactionRecord::StakeMint || type == TransactionRecord::StakeZPIV || type == TransactionRecord::MNReward) {
+    else if (type == TransactionRecord::Generated || type == TransactionRecord::StakeMint || type == TransactionRecord::StakeZPIV || type == TransactionRecord::MNReward || type == TransactionRecord::FNReward) {
         if (nBlocksToMaturity > 0) {
             status.status = TransactionStatus::Immature;
             status.matures_in = nBlocksToMaturity;
