@@ -296,7 +296,7 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
 
             if (transactionStatus == TrxValidationStatus::InValid) {
                 LogPrint("masternode","Invalid budget payment detected %s\n", txNew.ToString().c_str());
-                if (sporkManager.IsSporkActive(SPORK_8_FUNDAMENTALNODE_BUDGET_ENFORCEMENT))
+                if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_BUDGET_ENFORCEMENT))
                     return false;
 
                 LogPrint("masternode","Budget enforcement is disabled, accepting block\n");
@@ -314,7 +314,7 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
         return true;
     LogPrint("masternode","Invalid mn payment detected %s\n", txNew.ToString().c_str());
 
-    if (sporkManager.IsSporkActive(SPORK_7_FUNDAMENTALNODE_PAYMENT_ENFORCEMENT))
+    if (sporkManager.IsSporkActive(SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT))
         return false;
     LogPrint("masternode","Masternode payment enforcement is disabled, accepting block\n");
     return true;
@@ -585,7 +585,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
 
     CAmount nReward = GetBlockValue(nBlockHeight);
 
-    if (sporkManager.IsSporkActive(SPORK_7_FUNDAMENTALNODE_PAYMENT_ENFORCEMENT)) {
+    if (sporkManager.IsSporkActive(SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT)) {
         // Get a stable number of masternodes by ignoring newly activated (< 8000 sec old) masternodes
         nMasternode_Drift_Count = mnodeman.stable_size() + Params().MasternodeCountDrift();
     }

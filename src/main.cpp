@@ -4391,7 +4391,7 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
 
         if (budget.IsBudgetPaymentBlock(nHeight) &
                 sporkManager.IsSporkActive(SPORK_12_ENABLE_SUPERBLOCKS) &&
-                sporkManager.IsSporkActive(SPORK_8_FUNDAMENTALNODE_BUDGET_ENFORCEMENT))
+                sporkManager.IsSporkActive(SPORK_8_MASTERNODE_BUDGET_ENFORCEMENT))
             return true;
 
         return error("%s: Wrong cold staking outputs: vout[%d].scriptPubKey (%s) != vout[%d].scriptPubKey (%s) - value: %s",
