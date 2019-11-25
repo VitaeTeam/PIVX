@@ -66,25 +66,25 @@ class PIVX_RPCSporkTest(BitcoinTestFramework):
         sporks = self.nodes[1].spork("show")
         self.printDict(sporks)
         active = self.nodes[1].spork("active")
-        assert(not active["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"])
+        assert(not active["SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT"])
         # activate SPORK 8
         new_value = 1563253447
-        res = self.nodes[0].spork("SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT", new_value)
+        res = self.nodes[0].spork("SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT", new_value)
         assert(res == "success")
         sleep(1)
         self.sync_all()
         sporks = self.nodes[1].spork("show")
         self.printDict(sporks)
-        assert(sporks["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
+        assert(sporks["SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
         active = self.nodes[0].spork("active")
-        assert (active["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"])
+        assert (active["SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT"])
         self.log.info("Stopping nodes...")
         self.stop_nodes()
         self.log.info("Restarting node 1...")
         self.start_node(1, [])
         sporks = self.nodes[1].spork("show")
         self.printDict(sporks)
-        assert (sporks["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
+        assert (sporks["SPORK_7_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
 
 
 
