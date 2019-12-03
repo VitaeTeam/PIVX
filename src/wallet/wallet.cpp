@@ -2683,16 +2683,13 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, const CAmount& nValue, CWa
 // ppcoin: create coin stake transaction
 bool CWallet::CreateCoinStake(
         const CKeyStore& keystore,
+        const CBlockIndex* pindexPrev,
         unsigned int nBits,
         int64_t nSearchInterval,
         CMutableTransaction& txNew,
-        unsigned int& nTxNewTime
+        int64_t& nTxNewTime
         )
 {
-    // The following split & combine thresholds are important to security
-    // Should not be adjusted if you don't understand the consequences
-    //int64_t nCombineThreshold = 0;
-    const CBlockIndex* pindexPrev = chainActive.Tip();
     txNew.vin.clear();
     txNew.vout.clear();
 
@@ -2723,7 +2720,7 @@ bool CWallet::CreateCoinStake(
         return false;
     }
 
-    if (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() < 60) {
+    if (GetAdjustedTime() - pindexPrev->GetBlockTime() < 60) {
         if (Params().NetworkID() == CBaseChainParams::REGTEST) {
             MilliSleep(1000);
         }
@@ -2733,13 +2730,6 @@ bool CWallet::CreateCoinStake(
     CScript scriptPubKeyKernel;
     bool fKernelFound = false;
     int nAttempts = 0;
-
-    // Block time.
-    nTxNewTime = GetAdjustedTime();
-    // If the block time is in the future, then starts there.
-    if (pindexPrev->nTime > nTxNewTime) {
-        nTxNewTime = pindexPrev->nTime;
-    }
 
     for (std::unique_ptr<CStakeInput>& stakeInput : listInputs) {
         nCredit = 0;
@@ -2999,6 +2989,13 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
     return DB_LOAD_OK;
 }
 
+CBitcoinAddress CWallet::ParseIntoAddress(const CTxDestination& dest, const std::string& purpose) {
+    const CChainParams::Base58Type addrType =
+            AddressBook::IsColdStakingPurpose(purpose) ?
+            CChainParams::STAKING_ADDRESS : CChainParams::PUBKEY_ADDRESS;
+    return CBitcoinAddress(dest, addrType);
+}
+
 bool CWallet::SetAddressBook(const CTxDestination& address, const std::string& strName, const std::string& strPurpose)
 {
     bool fUpdated = HasAddressBook(address);
@@ -3012,33 +3009,46 @@ bool CWallet::SetAddressBook(const CTxDestination& address, const std::string& s
         strPurpose, (fUpdated ? CT_UPDATED : CT_NEW));
     if (!fFileBacked)
         return false;
-    if (!strPurpose.empty() && !CWalletDB(strWalletFile).WritePurpose(CBitcoinAddress(address).ToString(), strPurpose))
+    std::string addressStr = ParseIntoAddress(address, strPurpose).ToString();
+    if (!strPurpose.empty() && !CWalletDB(strWalletFile).WritePurpose(addressStr, strPurpose))
         return false;
-    return CWalletDB(strWalletFile).WriteName(CBitcoinAddress(address).ToString(), strName);
+    return CWalletDB(strWalletFile).WriteName(addressStr, strName);
 }
 
-bool CWallet::DelAddressBook(const CTxDestination& address)
+bool CWallet::DelAddressBook(const CTxDestination& address, const CChainParams::Base58Type addrType)
 {
+    std::string strAddress =  CBitcoinAddress(address, addrType).ToString();
+    std::string purpose = purposeForAddress(address);
     {
         LOCK(cs_wallet); // mapAddressBook
 
         if (fFileBacked) {
             // Delete destdata tuples associated with address
-            std::string strAddress = CBitcoinAddress(address).ToString();
             for (const PAIRTYPE(std::string, std::string) & item : mapAddressBook[address].destdata) {
                 CWalletDB(strWalletFile).EraseDestData(strAddress, item.first);
             }
-
         }
         mapAddressBook.erase(address);
     }
 
-    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, address) != ISMINE_NO, "", CT_DELETED);
+    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, address) != ISMINE_NO, purpose, CT_DELETED);
 
     if (!fFileBacked)
         return false;
-    CWalletDB(strWalletFile).ErasePurpose(CBitcoinAddress(address).ToString());
-    return CWalletDB(strWalletFile).EraseName(CBitcoinAddress(address).ToString());
+    CWalletDB(strWalletFile).ErasePurpose(strAddress);
+    return CWalletDB(strWalletFile).EraseName(strAddress);
+}
+
+std::string CWallet::purposeForAddress(const CTxDestination& address) const
+{
+    {
+        LOCK(cs_wallet);
+        auto mi = mapAddressBook.find(address);
+        if (mi != mapAddressBook.end()) {
+            return mi->second.purpose;
+        }
+    }
+    return "";
 }
 
 bool CWallet::HasAddressBook(const CTxDestination& address) const
@@ -5515,9 +5525,7 @@ void CWallet::SetNull()
     fBackupMints = false;
 
     // Stake Settings
-    nHashDrift = 45;
     nStakeSplitThreshold = STAKE_SPLIT_THRESHOLD;
-    nHashInterval = 22;
     nStakeSetUpdateTime = 300; // 5 minutes
 
     //MultiSend
