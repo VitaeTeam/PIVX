@@ -410,7 +410,7 @@ boost::filesystem::path GetDefaultDataDir()
 // Unix: ~/.pivx
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "PIVX";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Vitae";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -422,10 +422,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "PIVX";
+    return pathRet / "Vitae";
 #else
     // Unix
-    return pathRet / ".pivx";
+    return pathRet / ".vitae";
 #endif
 #endif
 }

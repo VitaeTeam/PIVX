@@ -120,12 +120,20 @@ uint256 CMasternode::GetSignatureHash() const
 
 std::string CMasternode::GetStrMessage() const
 {
+    if(chainActive.NewSigsActive()){
     return (addr.ToString() +
             std::to_string(sigTime) +
             pubKeyCollateralAddress.GetID().ToString() +
             pubKeyMasternode.GetID().ToString() +
             std::to_string(protocolVersion)
     );
+    }
+    else {
+        //Use oldMessage format before new sigs
+           std::string vchPubKey(pubKeyCollateralAddress.begin(), pubKeyCollateralAddress.end());
+           std::string vchPubKey2(pubKeyMasternode.begin(), pubKeyMasternode.end());
+           return addr.ToString() + std::to_string(sigTime) + vchPubKey + vchPubKey2 + std::to_string(protocolVersion);
+    }
 }
 
 //
@@ -337,7 +345,7 @@ bool CMasternode::IsInputAssociatedWithPubkey() const
     uint256 hash;
     if(GetTransaction(vin.prevout.hash, txVin, hash, true)) {
         for (CTxOut out : txVin.vout) {
-            if (out.nValue == 10000 * COIN && out.scriptPubKey == payee) return true;
+            if (out.nValue == MASTERNODEAMOUNT * COIN && out.scriptPubKey == payee) return true;
         }
     }
 

@@ -93,6 +93,8 @@ public:
     bool IsValidBlockTimeStamp(const int64_t nTime, const int nHeight) const;
 
     CAmount MaxMoneyOut() const { return nMaxMoneyOut; }
+    /** The fundamentalnode count that we will allow the see-saw reward payments to be off by */
+    int FundamentalnodeCountDrift() const { return nFundamentalnodeCountDrift; }
     /** The masternode count that we will allow the see-saw reward payments to be off by */
     int MasternodeCountDrift() const { return nMasternodeCountDrift; }
     /** Make miner stop after a block is found. In RPC, don't return until nGenProcLimit blocks are generated */
@@ -118,7 +120,7 @@ public:
     int64_t NewSporkStart() const { return nEnforceNewSporkKey; }
     int64_t RejectOldSporkKey() const { return nRejectOldSporkKey; }
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
-    int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
+    int64_t StartFundamentalnodePayments() const { return nStartFundamentalnodePayments; }
     int64_t Budget_Fee_Confirmations() const { return nBudget_Fee_Confirmations; }
 
     CBaseChainParams::Network NetworkID() const { return networkID; }
@@ -150,6 +152,7 @@ public:
     int Zerocoin_Block_V2_Start() const { return nBlockZerocoinV2; }
     bool IsStakeModifierV2(const int nHeight) const { return nHeight >= nBlockStakeModifierlV2; }
     int NewSigsActive(const int nHeight) const { return nHeight >= nBlockEnforceNewMessageSignatures; }
+
     int BIP65ActivationHeight() const { return nBIP65ActivationHeight; }
     int Block_V7_StartHeight() const { return nBlockV7StartHeight; }
 
@@ -186,6 +189,7 @@ protected:
     int64_t nPivxBadBlockTime;
     unsigned int nPivxBadBlocknBits;
     int nMasternodeCountDrift;
+    int nFundamentalnodeCountDrift;
     int nMaturity;
     int nStakeMinDepth;
     int nStakeMinAge;
@@ -217,7 +221,7 @@ protected:
     int64_t nEnforceNewSporkKey;
     int64_t nRejectOldSporkKey;
     std::string strObfuscationPoolDummyAddress;
-    int64_t nStartMasternodePayments;
+    int64_t nStartFundamentalnodePayments;
     std::string zerocoinModulus;
     int nMaxZerocoinSpendsPerTransaction;
     int nMaxZerocoinPublicSpendsPerTransaction;
@@ -232,7 +236,6 @@ protected:
     int nZerocoinStartTime;
     int nZerocoinRequiredStakeDepth;
     int64_t nProposalEstablishmentTime;
-    int nBIP65ActivationHeight;
 
     int nBlockEnforceSerialRange;
     int nBlockRecalculateAccumulators;
