@@ -4587,7 +4587,6 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
             // accept PIVX block minted with incorrect proof of work threshold
             return true;
         }
-        if(pindexPrev->nHeight + 1 != 201)
         return error("%s : incorrect proof of work at %d", __func__, pindexPrev->nHeight + 1);
     }
 

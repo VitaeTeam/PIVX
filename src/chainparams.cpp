@@ -159,13 +159,13 @@ public:
         bnProofOfStakeLimit_V2 = ~uint256(0) >> 20; // 60/4 = 15 ==> use 2**4 higher limit
         nSubsidyHalvingInterval = 210000;
         nMaxReorganizationDepth = 100;
-        nEnforceBlockUpgradeMajority = 10800; // 75%
-        nRejectBlockOutdatedMajority = 13680; // 95%
-        nToCheckBlockUpgradeMajority = 14400; // Approximate expected amount of blocks in 7 days (1440*7.5)
+        nEnforceBlockUpgradeMajority = 10800;  // 75% ... ((60*60*24)/45)*7.5 = 14400 or about 7 days
+        nRejectBlockOutdatedMajority = 13680;  // 95%
+        nToCheckBlockUpgradeMajority = 14400;  // Approximate expected amount of blocks in 7 days (1920*7.5)
         nMinerThreads = 0;
 
         nTargetSpacing = 1 * 45;                        // 45 seconds
-        nTargetTimespan = 40 * 60;                      // 40 minutes
+        nTargetTimespan = 45 * 40;                      // 40 minutes
         nTimeSlotLength = 15;                           // 15 seconds
         nTargetTimespan_V2 = 2 * nTimeSlotLength * 60;  // 30 minutes
         nMaturity = 8;
@@ -185,36 +185,37 @@ public:
         nModifierUpdateBlock = 615800;
         nZerocoinStartHeight = 209467;
         nZerocoinStartTime = 1536314400; // October 17, 2017 4:30:00 AM
+        nBlockRHFUpgrades = 1115151;
         nBlockEnforceSerialRange = 895400; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 891737; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 891730; //Last valid accumulator checkpoint
         nBlockEnforceInvalidUTXO = 902850; //Start enforcing the invalid UTXO's
         nInvalidAmountFiltered = 0; //Amount of invalid coins filtered through exchanges, that should be considered valid
-        nBlockZerocoinV2 = 1080000; //!> The block that zerocoin v2 becomes active - roughly Tuesday, May 8, 2018 4:00:00 AM GMT
+        nBlockZerocoinV2 = nBlockRHFUpgrades; //!> The block that zerocoin v2 becomes active - roughly Tuesday, May 8, 2018 4:00:00 AM GMT
         nBlockDoubleAccumulated = 1050010;
         nEnforceNewSporkKey = 1566860400; //!> Sporks signed after Monday, August 26, 2019 11:00:00 PM GMT must use the new spork key
         nRejectOldSporkKey = 1569538800; //!> Fully reject old spork key after Thursday, September 26, 2019 11:00:00 PM GMT
-        nBlockStakeModifierlV2 = 1967000;
+        nBlockStakeModifierlV2 = nBlockRHFUpgrades;
         nBIP65ActivationHeight = 1808634;
         // Activation height for TimeProtocolV2, Blocks V7 and newMessageSignatures
-        nBlockTimeProtocolV2 = 2967000; // !TODO: change me
+        nBlockTimeProtocolV2 = nBlockRHFUpgrades;
 
 
         // Public coin spend enforcement
-        nPublicZCSpends = 1080000;
+        nPublicZCSpends = nBlockRHFUpgrades;
 
         // New P2P messages signatures
-        nBlockEnforceNewMessageSignatures = nBlockTimeProtocolV2;
+        nBlockEnforceNewMessageSignatures = nBlockRHFUpgrades;
 
         // Blocks v7
-        nBlockLastAccumulatorCheckpoint = 1686240;
-        nBlockV7StartHeight = nBlockTimeProtocolV2;
+        nBlockLastAccumulatorCheckpoint = 891730;
+        nBlockV7StartHeight = nBlockRHFUpgrades;
 
 
         // Fake Serial Attack
-        nFakeSerialBlockheightEnd = 1686229;
-        nSupplyBeforeFakeSerial = 4131563 * COIN;   // zerocoin supply at block nFakeSerialBlockheightEnd
+        nFakeSerialBlockheightEnd = 1;
+        nSupplyBeforeFakeSerial = 0 * COIN;   // zerocoin supply at block nFakeSerialBlockheightEnd
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot

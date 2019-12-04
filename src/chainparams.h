@@ -236,6 +236,7 @@ protected:
     int nZerocoinStartTime;
     int nZerocoinRequiredStakeDepth;
     int nBIP65ActivationHeight;
+    int nBlockRHFUpgrades;
     int64_t nProposalEstablishmentTime;
 
     int nBlockEnforceSerialRange;
