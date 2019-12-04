@@ -7156,7 +7156,7 @@ int ActiveProtocol()
     //        return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 
     // SPORK_15 is used for 70918 (v4.0+)
-    if (sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
+    if (sporkManager.IsSporkActive(SPORK_14_NEW_PROTOCOL_ENFORCEMENT_2))
             return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 
     return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;

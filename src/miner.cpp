@@ -135,7 +135,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         pblock->nVersion = 7;       //!> Removes accumulator checkpoints
     } else {
         pblock->nVersion = 6;       //!> Supports V2 Stake Modifiers.
-
+    }
 
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
