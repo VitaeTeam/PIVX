@@ -214,7 +214,7 @@ public:
 
 
         // Fake Serial Attack
-        nFakeSerialBlockheightEnd = 1;
+        nFakeSerialBlockheightEnd = INT_MAX;
         nSupplyBeforeFakeSerial = 0 * COIN;   // zerocoin supply at block nFakeSerialBlockheightEnd
 
         /**
