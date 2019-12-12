@@ -6252,21 +6252,6 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
             return false;
         }
 
-
-
-        // PIVX: We use certain sporks during IBD, so check to see if they are
-        // available. If not, ask the first peer connected for them.
-        bool fMissingSporks = !pSporkDB->SporkExists(SPORK_13_NEW_PROTOCOL_ENFORCEMENT) &&
-                !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT_2) &&
-                !pSporkDB->SporkExists(SPORK_19_ZEROCOIN_MAINTENANCE_MODE);
-
-        if (fMissingSporks || !fRequestedSporksIDB){
-            LogPrintf("asking peer for sporks\n");
-            pfrom->PushMessage("getsporks");
-            fRequestedSporksIDB = true;
-        }
-
-
         int64_t nTime;
         CAddress addrMe;
         CAddress addrFrom;
@@ -6300,11 +6285,11 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         // PIVX: We use certain sporks during IBD, so check to see if they are
         // available. If not, ask the first peer connected for them.
         // TODO: Move this to an instant broadcast of the sporks.
-        bool fMissingSporks = !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT) ||
-                              !pSporkDB->SporkExists(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) ||
-                              !pSporkDB->SporkExists(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) ||
-                              !pSporkDB->SporkExists(SPORK_17_COLDSTAKING_ENFORCEMENT) ||
-                              !pSporkDB->SporkExists(SPORK_18_ZEROCOIN_PUBLICSPEND_V4);
+        bool fMissingSporks = !pSporkDB->SporkExists(SPORK_13_NEW_PROTOCOL_ENFORCEMENT) ||
+                              !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT_2) ||
+                              !pSporkDB->SporkExists(SPORK_19_ZEROCOIN_MAINTENANCE_MODE) ||
+                              !pSporkDB->SporkExists(SPORK_21_COLDSTAKING_ENFORCEMENT) ||
+                              !pSporkDB->SporkExists(SPORK_22_ZEROCOIN_PUBLICSPEND_V4);
 
         if (fMissingSporks || !fRequestedSporksIDB){
             LogPrintf("asking peer for sporks\n");
