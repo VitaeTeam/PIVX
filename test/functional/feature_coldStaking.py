@@ -68,7 +68,7 @@ class PIVX_ColdStakingTest(BitcoinTestFramework):
         mess = "Enabling" if fEnable else "Disabling"
         mess += " cold staking with SPORK 17..."
         self.log.info(mess)
-        res = self.nodes[0].spork("SPORK_17_COLDSTAKING_ENFORCEMENT", new_val)
+        res = self.nodes[0].spork("SPORK_21_COLDSTAKING_ENFORCEMENT", new_val)
         self.log.info(res)
         assert (res == "success")
         time.sleep(1)
@@ -78,7 +78,7 @@ class PIVX_ColdStakingTest(BitcoinTestFramework):
     def isColdStakingEnforced(self):
         # verify from node[1]
         active = self.nodes[1].spork("active")
-        return active["SPORK_17_COLDSTAKING_ENFORCEMENT"]
+        return active["SPORK_21_COLDSTAKING_ENFORCEMENT"]
 
 
 
