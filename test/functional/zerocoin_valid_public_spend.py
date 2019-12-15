@@ -67,7 +67,7 @@ class zPIVValidCoinSpendTest(BitcoinTestFramework):
         mess = "Enabling v4" if fEnable else "Enabling v3"
         mess += " PublicSpend version with SPORK 18..."
         self.log.info(mess)
-        res = self.nodes[0].spork("SPORK_18_ZEROCOIN_PUBLICSPEND_V4", new_val)
+        res = self.nodes[0].spork("SPORK_22_ZEROCOIN_PUBLICSPEND_V4", new_val)
         self.log.info(res)
         assert_equal(res, "success")
         sleep(1)
